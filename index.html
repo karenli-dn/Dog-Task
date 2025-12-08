@@ -6,61 +6,100 @@
   <title>狗狗設計任務單</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&display=swap');
-    body { font-family: 'Noto Sans TC', sans-serif; background-color: #f3f4f6; }
-    .btn-primary { background-color: #4F46E5; color: white; }
-    .btn-primary:hover { background-color: #4338ca; }
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap');
+    
+    /* LINE 風格配色 */
+    :root {
+      --line-green: #06C755;
+      --line-bg: #F5F6F8;
+    }
+    
+    body { 
+      font-family: 'Noto Sans TC', sans-serif; 
+      background-color: var(--line-bg); 
+    }
+    
+    /* 自訂 LINE 綠色按鈕 */
+    .btn-line {
+      background-color: var(--line-green);
+      color: white;
+      transition: all 0.2s;
+    }
+    .btn-line:active {
+      background-color: #05b34c;
+      transform: scale(0.98);
+    }
+    
+    /* 輸入框聚焦時的綠色外框 */
+    .input-line:focus {
+      border-color: var(--line-green);
+      ring-color: var(--line-green);
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(6, 199, 85, 0.2);
+    }
   </style>
 </head>
-<body class="p-4 flex justify-center items-start min-h-screen">
+<body class="flex justify-center items-start min-h-screen">
 
-  <div class="w-full max-w-md bg-white rounded-xl shadow-lg overflow-hidden">
-    <div class="bg-indigo-600 p-6 text-center">
-      <h1 class="text-2xl font-bold text-white tracking-wide">🐶 狗狗設計-任務單</h1>
-      <p class="text-indigo-200 text-sm mt-2">GitHub 專業版 (無廣告)</p>
+  <div class="w-full max-w-md bg-white min-h-screen shadow-sm">
+    
+    <div class="bg-[#06C755] p-4 text-center sticky top-0 z-10 shadow-sm">
+      <h1 class="text-lg font-bold text-white tracking-wide">
+        🐶 狗狗設計任務單
+      </h1>
     </div>
 
-    <form id="taskForm" class="p-6 space-y-4">
-      <div>
-        <label class="block text-gray-700 font-bold mb-1">👤 召喚者</label>
-        <input type="text" id="userName" class="w-full px-4 py-2 border rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="您的名字" required>
+    <form id="taskForm" class="p-5 space-y-5">
+      
+      <div class="bg-green-50 text-green-800 text-xs p-3 rounded-lg border border-green-100">
+        💡 請詳細填寫需求，狗狗設計師會儘快處理！
       </div>
 
       <div>
-        <label class="block text-gray-700 font-bold mb-1">📌 項目</label>
-        <input type="text" id="project" class="w-full px-4 py-2 border rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="專案名稱" required>
+        <label class="block text-gray-800 text-sm font-bold mb-1.5">👤 您的稱呼</label>
+        <input type="text" id="userName" class="input-line w-full px-4 py-3 border border-gray-200 rounded-lg bg-gray-50 text-gray-700" 
+          placeholder="例如：Karen / 遊戲部門" required>
       </div>
 
       <div>
-        <label class="block text-gray-700 font-bold mb-1">📝 規格備註</label>
-        <textarea id="spec" rows="3" class="w-full px-4 py-2 border rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="尺寸、材質..."></textarea>
+        <label class="block text-gray-800 text-sm font-bold mb-1.5">📌 項目名稱</label>
+        <input type="text" id="project" class="input-line w-full px-4 py-3 border border-gray-200 rounded-lg bg-gray-50 text-gray-700" 
+          placeholder="例如：蔚藍檔案 / 線上 / Banner" required>
       </div>
 
       <div>
-        <label class="block text-gray-700 font-bold mb-1">📅 截稿日</label>
-        <input type="date" id="deadline" class="w-full px-4 py-2 border rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500" required>
+        <label class="block text-gray-800 text-sm font-bold mb-1.5">📝 規格備註</label>
+        <textarea id="spec" rows="3" class="input-line w-full px-4 py-3 border border-gray-200 rounded-lg bg-gray-50 text-gray-700" 
+          placeholder="尺寸、材質、特殊要求..."></textarea>
       </div>
 
       <div>
-        <label class="block text-gray-700 font-bold mb-1">🔗 素材連結</label>
-        <input type="text" id="link" class="w-full px-4 py-2 border rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="http://...">
+        <label class="block text-gray-800 text-sm font-bold mb-1.5">📅 希望截稿日</label>
+        <input type="date" id="deadline" class="input-line w-full px-4 py-3 border border-gray-200 rounded-lg bg-gray-50 text-gray-700" required>
       </div>
 
-      <div class="pt-4">
-        <button type="button" onclick="submitData()" id="submitBtn" class="w-full btn-primary font-bold py-3 px-4 rounded-lg shadow transition transform hover:scale-105">
-          🚀 發送任務
+      <div>
+        <label class="block text-gray-800 text-sm font-bold mb-1.5">🔗 素材連結</label>
+        <input type="text" id="link" class="input-line w-full px-4 py-3 border border-gray-200 rounded-lg bg-gray-50 text-gray-700" 
+          placeholder="例如：公檔連結 或是 https://">
+      </div>
+
+      <div class="pt-4 pb-8">
+        <button type="button" onclick="submitData()" id="submitBtn" class="w-full btn-line font-bold py-3.5 px-4 rounded-lg shadow-sm text-base flex justify-center items-center gap-2">
+          <span>🚀 送出任務</span>
         </button>
       </div>
     </form>
     
-    <div class="bg-gray-100 p-3 text-center text-xs text-gray-500">
-      Designed by Karen & AI Assistant
+    <div class="text-center text-xs text-gray-400 pb-6">
+      Design Service System
     </div>
   </div>
 
   <script>
-    // 🔴 唯一要改的地方：請把 Google Script 網址貼在下面引號內！
+    // 🔴🔴🔴 請務必再次確認這裡有換成您的 Google Script 網址！ 🔴🔴🔴
     const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxKOQca5G4SzrnIqMSNeY5V_ffJoXr4cCi5yFkDdX2hFQ6-HxRbINY2Exy0ys3rPVQ/exec";
 
     function submitData() {
@@ -75,33 +114,45 @@
         link: document.getElementById('link').value
       };
 
-      // 檢查必填
+      // 檢查必填 (只檢查名字和專案)
       if(!data.userName || !data.project) {
-        Swal.fire({ icon: 'warning', title: '汪！', text: '名字和專案名稱一定要填喔！', confirmButtonColor: '#4F46E5' });
+        Swal.fire({ 
+          icon: 'warning', 
+          title: '資料未填完', 
+          text: '「稱呼」和「項目名稱」是必填的喔！', 
+          confirmButtonColor: '#06C755' 
+        });
         return;
       }
 
       // 鎖定按鈕
       btn.disabled = true; 
-      btn.innerText = "🐶 狗狗奔跑中...";
+      btn.innerHTML = '🔄 傳送中...';
+      btn.classList.add('opacity-70');
 
-      // 發送資料 (使用 no-cors 模式以避免跨域問題)
+      // 發送資料
       fetch(GOOGLE_SCRIPT_URL, {
         method: "POST",
         body: JSON.stringify(data),
         mode: "no-cors" 
       }).then(() => {
         // 成功
-        Swal.fire({ icon: 'success', title: '成功！', text: '狗狗收到任務了！', confirmButtonColor: '#4F46E5' });
+        Swal.fire({ 
+          icon: 'success', 
+          title: '發送成功！', 
+          text: '狗狗已經收到您的任務了！', 
+          confirmButtonColor: '#06C755' 
+        });
         document.getElementById('taskForm').reset();
         btn.disabled = false; 
-        btn.innerText = "🚀 發送任務";
+        btn.innerHTML = '<span>🚀 送出任務</span>';
+        btn.classList.remove('opacity-70');
       }).catch(err => {
         // 失敗
         console.error(err);
         Swal.fire({ icon: 'error', title: '失敗', text: '網路怪怪的，請再試一次' });
         btn.disabled = false; 
-        btn.innerText = "🚀 發送任務";
+        btn.innerHTML = '<span>🚀 送出任務</span>';
       });
     }
   </script>
