@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>狗狗設計任務單</title>
+  <title>任務受理桌</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   
@@ -43,18 +43,18 @@
 </head>
 <body class="flex justify-center items-start min-h-screen">
 
-  <div class="w-full max-w-md bg-white min-h-screen shadow-sm">
+  <div class="w-full max-w-md bg-white min-h-screen shadow-sm flex flex-col">
     
     <div class="bg-[#06C755] p-4 text-center sticky top-0 z-10 shadow-sm">
       <h1 class="text-lg font-bold text-white tracking-wide">
-        🐶 狗狗設計任務單
+        特助狗設計任務單
       </h1>
     </div>
 
-    <form id="taskForm" class="p-5 space-y-5">
+    <form id="taskForm" class="p-5 space-y-5 flex-grow">
       
       <div class="bg-green-50 text-green-800 text-xs p-3 rounded-lg border border-green-100">
-        💡 請詳細填寫需求，狗狗設計師會儘快處理！
+        💡 由特助狗控管的設計任務更不會失控！
       </div>
 
       <div>
@@ -64,7 +64,7 @@
       </div>
 
       <div>
-        <label class="block text-gray-800 text-sm font-bold mb-1.5">📌 項目名稱</label>
+        <label class="block text-gray-800 text-sm font-bold mb-1.5">📌 項目內容</label>
         <input type="text" id="project" class="input-line w-full px-4 py-3 border border-gray-200 rounded-lg bg-gray-50 text-gray-700" 
           placeholder="例如：蔚藍檔案 / 線上 / Banner" required>
       </div>
@@ -82,39 +82,72 @@
 
       <div>
         <label class="block text-gray-800 text-sm font-bold mb-1.5">🔗 素材連結</label>
-        <input type="text" id="link" class="input-line w-full px-4 py-3 border border-gray-200 rounded-lg bg-gray-50 text-gray-700" 
-          placeholder="例如：公檔連結 或是 https://">
+        <div id="links-container" class="space-y-2">
+          <input type="text" class="link-item input-line w-full px-4 py-3 border border-gray-200 rounded-lg bg-gray-50 text-gray-700" 
+            placeholder="例如：公檔連結 或是 http://">
+        </div>
+        <button type="button" onclick="addLinkField()" class="mt-3 text-sm text-[#06C755] font-bold hover:text-green-700 flex items-center gap-1 px-1 py-1 rounded transition">
+          <span class="text-lg">＋</span> 增加一組連結
+        </button>
       </div>
 
-      <div class="pt-4 pb-8">
+      <div class="pt-4 pb-4">
         <button type="button" onclick="submitData()" id="submitBtn" class="w-full btn-line font-bold py-3.5 px-4 rounded-lg shadow-sm text-base flex justify-center items-center gap-2">
           <span>🚀 送出任務</span>
         </button>
       </div>
     </form>
     
-    <div class="text-center text-xs text-gray-400 pb-6">
-      Design Service System
+    <div class="text-center text-xs text-gray-400 pb-8 pt-2">
+      Design by karen
     </div>
   </div>
 
   <script>
-    // 🔴🔴🔴 請務必再次確認這裡有換成您的 Google Script 網址！ 🔴🔴🔴
+    // 🔴🔴🔴 請務必記得把這裡換成您的 Google Script 網址！ 🔴🔴🔴
     const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxKOQca5G4SzrnIqMSNeY5V_ffJoXr4cCi5yFkDdX2hFQ6-HxRbINY2Exy0ys3rPVQ/exec";
+
+    // 動態新增連結欄位的功能
+    function addLinkField() {
+      const container = document.getElementById('links-container');
+      const div = document.createElement('div');
+      div.className = "flex gap-2 items-center animate-fade-in"; // 加入 flex 排版
+      
+      // 新的輸入框 HTML
+      div.innerHTML = `
+        <input type="text" class="link-item input-line w-full px-4 py-3 border border-gray-200 rounded-lg bg-gray-50 text-gray-700" 
+          placeholder="還有其他連結嗎？">
+        <button type="button" onclick="this.parentElement.remove()" class="text-gray-400 hover:text-red-500 p-2 text-xl font-bold" title="刪除此連結">
+          ✕
+        </button>
+      `;
+      container.appendChild(div);
+    }
 
     function submitData() {
       const btn = document.getElementById('submitBtn');
       
-      // 收集資料
+      // 1. 收集所有連結欄位的值
+      const linkInputs = document.querySelectorAll('.link-item');
+      let allLinks = [];
+      linkInputs.forEach(input => {
+        if(input.value.trim() !== "") {
+          allLinks.push(input.value.trim());
+        }
+      });
+      // 把連結串起來，用換行符號隔開
+      const finalLinkString = allLinks.join('\n');
+
+      // 2. 準備要傳送的資料
       const data = {
         userName: document.getElementById('userName').value,
         project: document.getElementById('project').value,
         spec: document.getElementById('spec').value,
         deadline: document.getElementById('deadline').value,
-        link: document.getElementById('link').value
+        link: finalLinkString // 傳送串接好的連結
       };
 
-      // 檢查必填 (只檢查名字和專案)
+      // 檢查必填
       if(!data.userName || !data.project) {
         Swal.fire({ 
           icon: 'warning', 
@@ -144,6 +177,13 @@
           confirmButtonColor: '#06C755' 
         });
         document.getElementById('taskForm').reset();
+        
+        // 重置連結欄位 (只保留第一個)
+        document.getElementById('links-container').innerHTML = `
+          <input type="text" class="link-item input-line w-full px-4 py-3 border border-gray-200 rounded-lg bg-gray-50 text-gray-700" 
+            placeholder="例如：公檔連結 或是 http://">
+        `;
+
         btn.disabled = false; 
         btn.innerHTML = '<span>🚀 送出任務</span>';
         btn.classList.remove('opacity-70');
