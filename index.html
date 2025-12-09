@@ -1,200 +1,111 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>任務受理桌</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap');
-    
-    /* LINE 風格配色 */
-    :root {
-      --line-green: #06C755;
-      --line-bg: #F5F6F8;
-    }
-    
-    body { 
-      font-family: 'Noto Sans TC', sans-serif; 
-      background-color: var(--line-bg); 
-    }
-    
-    /* 自訂 LINE 綠色按鈕 */
-    .btn-line {
-      background-color: var(--line-green);
-      color: white;
-      transition: all 0.2s;
-    }
-    .btn-line:active {
-      background-color: #05b34c;
-      transform: scale(0.98);
-    }
-    
-    /* 輸入框聚焦時的綠色外框 */
-    .input-line:focus {
-      border-color: var(--line-green);
-      ring-color: var(--line-green);
-      outline: none;
-      box-shadow: 0 0 0 3px rgba(6, 199, 85, 0.2);
-    }
-  </style>
-</head>
-<body class="flex justify-center items-start min-h-screen">
+<script>
+    // 🔴🔴🔴 請務必填寫您的 Google Script 網址 (以 /exec 結尾) 🔴🔴🔴
+    const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwNGeCd75Ifth9tIcwoooZxfAL7Ftfaqtuc-Gy7w24JSnxeIay7bg3z9yeCwVRkYajI/exec";
 
-  <div class="w-full max-w-md bg-white min-h-screen shadow-sm flex flex-col">
-    
-    <div class="bg-[#06C755] p-4 text-center sticky top-0 z-10 shadow-sm">
-      <h1 class="text-lg font-bold text-white tracking-wide">
-        特助狗設計任務單
-      </h1>
-    </div>
-
-    <form id="taskForm" class="p-5 space-y-5 flex-grow">
-      
-      <div class="bg-green-50 text-green-800 text-xs p-3 rounded-lg border border-green-100">
-        💡 由特助狗控管的設計任務更不會失控！
-      </div>
-
-      <div>
-        <label class="block text-gray-800 text-sm font-bold mb-1.5">👤 您的稱呼</label>
-        <input type="text" id="userName" class="input-line w-full px-4 py-3 border border-gray-200 rounded-lg bg-gray-50 text-gray-700" 
-          placeholder="例如：Karen / 遊戲部門" required>
-      </div>
-
-      <div>
-        <label class="block text-gray-800 text-sm font-bold mb-1.5">📌 項目內容</label>
-        <input type="text" id="project" class="input-line w-full px-4 py-3 border border-gray-200 rounded-lg bg-gray-50 text-gray-700" 
-          placeholder="例如：蔚藍檔案 / 線上 / Banner" required>
-      </div>
-
-      <div>
-        <label class="block text-gray-800 text-sm font-bold mb-1.5">📝 規格備註</label>
-        <textarea id="spec" rows="3" class="input-line w-full px-4 py-3 border border-gray-200 rounded-lg bg-gray-50 text-gray-700" 
-          placeholder="尺寸、材質、特殊要求..."></textarea>
-      </div>
-
-      <div>
-        <label class="block text-gray-800 text-sm font-bold mb-1.5">📅 希望截稿日</label>
-        <input type="date" id="deadline" class="input-line w-full px-4 py-3 border border-gray-200 rounded-lg bg-gray-50 text-gray-700" required>
-      </div>
-
-      <div>
-        <label class="block text-gray-800 text-sm font-bold mb-1.5">🔗 素材連結</label>
-        <div id="links-container" class="space-y-2">
-          <input type="text" class="link-item input-line w-full px-4 py-3 border border-gray-200 rounded-lg bg-gray-50 text-gray-700" 
-            placeholder="例如：公檔連結 或是 http://">
-        </div>
-        <button type="button" onclick="addLinkField()" class="mt-3 text-sm text-[#06C755] font-bold hover:text-green-700 flex items-center gap-1 px-1 py-1 rounded transition">
-          <span class="text-lg">＋</span> 增加一組連結
-        </button>
-      </div>
-
-      <div class="pt-4 pb-4">
-        <button type="button" onclick="submitData()" id="submitBtn" class="w-full btn-line font-bold py-3.5 px-4 rounded-lg shadow-sm text-base flex justify-center items-center gap-2">
-          <span>🚀 送出任務</span>
-        </button>
-      </div>
-    </form>
-    
-    <div class="text-center text-xs text-gray-400 pb-8 pt-2">
-      Design by karen
-    </div>
-  </div>
-
-  <script>
-    // 🔴🔴🔴 請務必記得把這裡換成您的 Google Script 網址！ 
-    const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxKOQca5G4SzrnIqMSNeY5V_ffJoXr4cCi5yFkDdX2hFQ6-HxRbINY2Exy0ys3rPVQ/exec";
-
-    // 動態新增連結欄位的功能
+    // 新增連結欄位功能
     function addLinkField() {
-      const container = document.getElementById('links-container');
-      const div = document.createElement('div');
-      div.className = "flex gap-2 items-center animate-fade-in"; // 加入 flex 排版
-      
-      // 新的輸入框 HTML
-      div.innerHTML = `
-        <input type="text" class="link-item input-line w-full px-4 py-3 border border-gray-200 rounded-lg bg-gray-50 text-gray-700" 
-          placeholder="還有其他連結嗎？">
-        <button type="button" onclick="this.parentElement.remove()" class="text-gray-400 hover:text-red-500 p-2 text-xl font-bold" title="刪除此連結">
-          ✕
-        </button>
-      `;
-      container.appendChild(div);
+        const container = document.getElementById('linkContainer');
+        const newDiv = document.createElement('div');
+        newDiv.className = 'flex gap-2 link-group animate-fade-in';
+        newDiv.innerHTML = `
+            <input type="text" name="link[]"
+                class="w-full px-5 py-3 rounded-2xl glass-input text-gray-700 font-medium placeholder-gray-400 link-input"
+                placeholder="另一個連結...">
+            <button type="button" onclick="this.parentElement.remove()" class="text-gray-400 hover:text-red-500 px-2 btn-icon">
+                ✕
+            </button>
+        `;
+        container.appendChild(newDiv);
     }
 
     function submitData() {
-      const btn = document.getElementById('submitBtn');
+      var btn = document.getElementById('submitBtn');
       
-      // 1. 收集所有連結欄位的值
-      const linkInputs = document.querySelectorAll('.link-item');
-      let allLinks = [];
+      // 1. 抓取資料
+      var userName = document.getElementById('userName').value.trim();
+      var client = document.getElementById('client').value.trim();   // 新欄位
+      var project = document.getElementById('project').value.trim();
+      var spec = document.getElementById('spec').value.trim();
+      var deadline = document.getElementById('deadline').value;
+      var draftDate = document.getElementById('draftDate').value;    // 新欄位
+      
+      // 收集所有連結
+      var linkInputs = document.querySelectorAll('.link-input');
+      var links = [];
       linkInputs.forEach(input => {
-        if(input.value.trim() !== "") {
-          allLinks.push(input.value.trim());
-        }
+          if(input.value.trim() !== "") {
+              links.push(input.value.trim());
+          }
       });
-      // 把連結串起來，用換行符號隔開
-      const finalLinkString = allLinks.join('\n');
+      var linkString = links.join('\n');
 
-      // 2. 準備要傳送的資料
-      const data = {
-        userName: document.getElementById('userName').value,
-        project: document.getElementById('project').value,
-        spec: document.getElementById('spec').value,
-        deadline: document.getElementById('deadline').value,
-        link: finalLinkString // 傳送串接好的連結
-      };
-
-      // 檢查必填
-      if(!data.userName || !data.project) {
-        Swal.fire({ 
-          icon: 'warning', 
-          title: '資料未填完', 
-          text: '「稱呼」和「項目名稱」是必填的喔！', 
-          confirmButtonColor: '#06C755' 
+      // 2. 檢查必填
+      if (userName === "" || project === "" || client === "") {
+        Swal.fire({
+          icon: 'warning',
+          title: '汪汪！缺資料',
+          text: '請至少填寫「召喚者」、「客戶」和「項目名稱」',
+          confirmButtonColor: '#FF9A9E',
+          iconColor: '#FF9A9E',
+          background: 'rgba(255,255,255,0.95)',
+          customClass: { popup: 'rounded-2xl' }
         });
         return;
       }
 
-      // 鎖定按鈕
-      btn.disabled = true; 
-      btn.innerHTML = '🔄 傳送中...';
-      btn.classList.add('opacity-70');
+      // 3. 鎖定按鈕
+      btn.disabled = true;
+      const originalHTML = btn.innerHTML;
+      btn.innerHTML = '🐕 狗狗奔跑中...';
+      
+      // 4. 打包資料
+      var formData = {
+        userName: userName,
+        client: client,
+        project: project,
+        spec: spec,
+        deadline: deadline,
+        draftDate: draftDate,
+        link: linkString
+      };
 
-      // 發送資料
+      // 5. 使用 fetch 發送 (這是 GitHub 專用的寫法)
       fetch(GOOGLE_SCRIPT_URL, {
         method: "POST",
-        body: JSON.stringify(data),
-        mode: "no-cors" 
+        body: JSON.stringify(formData),
+        mode: "no-cors"
       }).then(() => {
-        // 成功
-        Swal.fire({ 
-          icon: 'success', 
-          title: '發送成功！', 
-          text: '狗狗已經收到您的任務了！', 
-          confirmButtonColor: '#06C755' 
+        // 成功後執行
+        Swal.fire({
+            icon: 'success',
+            title: '任務收到！',
+            text: '狗狗已經把需求咬走了！',
+            confirmButtonColor: '#FF9A9E',
+            iconColor: '#FF9A9E',
+            customClass: { popup: 'rounded-2xl' }
+        }).then(() => {
+            document.getElementById('taskForm').reset();
+            // 重置連結欄位
+            document.getElementById('linkContainer').innerHTML = `
+                <div class="flex gap-2 link-group">
+                    <input type="text" name="link[]"
+                        class="w-full px-5 py-3 rounded-2xl glass-input text-gray-700 font-medium placeholder-gray-400 link-input"
+                        placeholder="貼上網址或內部路徑 (如 \\\\Server\\Files)">
+                </div>
+            `;
+            btn.disabled = false;
+            btn.innerHTML = originalHTML;
         });
-        document.getElementById('taskForm').reset();
-        
-        // 重置連結欄位 (只保留第一個)
-        document.getElementById('links-container').innerHTML = `
-          <input type="text" class="link-item input-line w-full px-4 py-3 border border-gray-200 rounded-lg bg-gray-50 text-gray-700" 
-            placeholder="例如：公檔連結 或是 http://">
-        `;
-
-        btn.disabled = false; 
-        btn.innerHTML = '<span>🚀 送出任務</span>';
-        btn.classList.remove('opacity-70');
       }).catch(err => {
-        // 失敗
+        // 失敗時執行
         console.error(err);
-        Swal.fire({ icon: 'error', title: '失敗', text: '網路怪怪的，請再試一次' });
-        btn.disabled = false; 
-        btn.innerHTML = '<span>🚀 送出任務</span>';
+        Swal.fire({
+            icon: 'error',
+            title: '嗷嗚...',
+            text: '網路怪怪的，請再試一次。',
+        });
+        btn.disabled = false;
+        btn.innerHTML = originalHTML;
       });
     }
   </script>
-</body>
-</html>
