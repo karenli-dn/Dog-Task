@@ -5,7 +5,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>凱倫工單2.0</title>
-  
+  <meta name="description" content="由特助狗主理的設計工單系統。所有任務都會被記錄、分類與追蹤；資料不足會提醒補齊，完整的需求將立即進入處理流程。">
+
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   
@@ -151,11 +152,11 @@
 
         <div class="space-y-1">
           <label class="block text-gray-600 font-bold text-sm ml-1 flex items-center gap-1" for="project">
-             <span class="text-lg">🐾</span> 項目名稱
+             <span class="text-lg">🐾</span> 設計項目
           </label>
           <input type="text" id="project" name="project" required
             class="w-full px-5 py-3 rounded-2xl glass-input text-gray-700 font-medium placeholder-gray-400"
-            placeholder="例：KV 延伸、Banner 設計...">
+            placeholder="例：KV 延伸、resize、無素材、提案合成、影片、包店…">
         </div>
 
         <div class="space-y-1">
@@ -164,7 +165,7 @@
           </label>
           <textarea id="spec" name="spec" rows="3" required
             class="w-full px-5 py-3 rounded-2xl glass-input text-gray-700 font-medium placeholder-gray-400 resize-none"
-            placeholder="尺寸、材質、格式..."></textarea>
+            placeholder="FB 1200x628/Banner/海報輸出/PPT模板/格式..."></textarea>
         </div>
 
         <div class="grid grid-cols-2 gap-4">
@@ -178,7 +179,7 @@
           
           <div class="space-y-1 flex flex-col">
              <label class="block text-gray-600 font-bold text-sm ml-1 flex items-center gap-1" for="draftDate">
-              <span class="text-lg">🐾</span> 預計近稿日
+              <span class="text-lg">🐾</span> 預計進稿日
             </label>
             <input type="date" id="draftDate" name="draftDate"
               class="w-full px-5 py-3 rounded-2xl glass-input text-gray-700 font-medium cursor-pointer">
@@ -312,7 +313,7 @@
         Swal.fire({
             icon: 'success',
             title: '任務收到！',
-            text: '已經把需求咬走了！',
+            text: '已處理完畢！',
             confirmButtonColor: '#FF9A9E',
             iconColor: '#FF9A9E',
             customClass: { popup: 'rounded-2xl' }
