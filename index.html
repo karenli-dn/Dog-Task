@@ -1,6 +1,16 @@
 <script>
-    // 🔴🔴🔴 請務必填寫您的 Google Script 網址 (以 /exec 結尾) 🔴🔴🔴
+    // 🔴🔴🔴 這裡一定要改！請貼上您的 Google Script 網址 🔴🔴🔴
     const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwNGeCd75Ifth9tIcwoooZxfAL7Ftfaqtuc-Gy7w24JSnxeIay7bg3z9yeCwVRkYajI/exec";
+    
+    // 🟢 (選填) 如果您有申請 LIFF，請填在這裡，沒有就留空
+    const LIFF_URL = ""; 
+
+    // 自動導航：如果是手機 LINE 開啟，跳轉到 LIFF (全螢幕)
+    if (LIFF_URL && navigator.userAgent.includes("Line") && navigator.userAgent.includes("Mobile")) {
+       if (!window.location.href.includes("liff.line.me")) {
+           window.location.href = LIFF_URL;
+       }
+    }
 
     // 新增連結欄位功能
     function addLinkField() {
@@ -21,13 +31,13 @@
     function submitData() {
       var btn = document.getElementById('submitBtn');
       
-      // 1. 抓取資料
+      // 1. 抓取資料 (確保 ID 與 HTML 對應)
       var userName = document.getElementById('userName').value.trim();
-      var client = document.getElementById('client').value.trim();   // 新欄位
+      var client = document.getElementById('client').value.trim();
       var project = document.getElementById('project').value.trim();
       var spec = document.getElementById('spec').value.trim();
       var deadline = document.getElementById('deadline').value;
-      var draftDate = document.getElementById('draftDate').value;    // 新欄位
+      var draftDate = document.getElementById('draftDate').value;
       
       // 收集所有連結
       var linkInputs = document.querySelectorAll('.link-input');
@@ -58,7 +68,7 @@
       const originalHTML = btn.innerHTML;
       btn.innerHTML = '🐕 狗狗奔跑中...';
       
-      // 4. 打包資料
+      // 4. 打包資料 (這裡要用 fetch 傳送)
       var formData = {
         userName: userName,
         client: client,
@@ -69,13 +79,13 @@
         link: linkString
       };
 
-      // 5. 使用 fetch 發送 (這是 GitHub 專用的寫法)
+      // 5. 發送資料給 Google Script (使用 GitHub 專用寫法)
       fetch(GOOGLE_SCRIPT_URL, {
         method: "POST",
         body: JSON.stringify(formData),
-        mode: "no-cors"
+        mode: "no-cors" // 關鍵：避免跨域錯誤
       }).then(() => {
-        // 成功後執行
+        // 成功
         Swal.fire({
             icon: 'success',
             title: '任務收到！',
@@ -97,7 +107,7 @@
             btn.innerHTML = originalHTML;
         });
       }).catch(err => {
-        // 失敗時執行
+        // 失敗
         console.error(err);
         Swal.fire({
             icon: 'error',
