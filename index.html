@@ -204,6 +204,30 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <div class="flex items-center gap-1">
                 <span class="text-lg">🐾</span> 素材或指示書連結
             </div>
+            <div class="form-group" style="margin-bottom: 20px; text-align: left;">
+    <label for="email" style="display: block; margin-bottom: 8px; font-weight: bold; color: #4a5568;">
+        Email (接收確認信用)
+    </label>
+    <input 
+        type="email" 
+        id="email" 
+        name="email" 
+        placeholder="例如：karen@example.com" 
+        required
+        style="
+            width: 100%; 
+            padding: 12px 16px; 
+            border: 2px solid #e2e8f0; 
+            border-radius: 8px; 
+            font-size: 16px; 
+            outline: none; 
+            transition: border-color 0.2s; 
+            box-sizing: border-box;
+        "
+        onfocus="this.style.borderColor='#1DB446';" 
+        onblur="this.style.borderColor='#e2e8f0';"
+    >
+</div>
             <button type="button" onclick="addLinkField()" class="text-xs px-3 py-1 rounded-full btn-icon font-bold btn-mango shadow-sm">
                 + 新增連結
             </button>
