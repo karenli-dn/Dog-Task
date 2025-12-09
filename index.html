@@ -233,16 +233,7 @@
     // 🔴🔴🔴 1. 請在此填入您的 Google Apps Script 網址 (必填) 🔴🔴🔴
     const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwNGeCd75Ifth9tIcwoooZxfAL7Ftfaqtuc-Gy7w24JSnxeIay7bg3z9yeCwVRkYajI/exec";
     
-     // 🟢 2. 請在此填入您的 LIFF URL (選填，填了手機就會自動變全螢幕)
-    const MY_LIFF_URL = "https://liff.line.me/2008649114-Xqev0PxK"; 
-
-    // === 自動導航邏輯 ===
-    if (MY_LIFF_URL && navigator.userAgent.includes("Line") && navigator.userAgent.includes("Mobile")) {
-       if (!window.location.href.includes("liff.line.me")) {
-           window.location.href = MY_LIFF_URL;
-       }
-    }
-
+   
     // 新增連結欄位
     function addLinkField() {
         const container = document.getElementById('linkContainer');
